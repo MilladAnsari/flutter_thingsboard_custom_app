@@ -22,9 +22,12 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.4' # یا نسخه مشخصی که پروژت نیاز داره (مثلا 3.24.0)
+          flutter-version: '3.29.3' # یا نسخه مشخصی که پروژت نیاز داره (مثلا 3.24.0)
           cache: true
-
+          
+      - name: Check versions
+        run: flutter --version
+        
       - name: Install dependencies
         run: flutter pub get
 
