@@ -1,45 +1,43 @@
-name: Build Android APK
+name: Build Flutter APK
 
 on:
-  workflow_dispatch:        # اجرای دستی از تب Actions
   push:
-    branches: [ main ]      # یا master، هر کدوم که branch اصلیته
+    branches: [ main, master ] # با پوش کردن به این برنچ‌ها اجرا میشه
+  workflow_dispatch: # این خط بهت اجازه میده دستی با یک دکمه بیلد بگیری
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Flutter
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          flutter-version: '3.x' # یا نسخه مشخصی که پروژت نیاز داره (مثلا 3.24.0)
+          channel: 'stable'
           cache: true
 
       - name: Install dependencies
-        run: |
-          flutter pub upgrade --major-versions
-          flutter p
+        run: flutter pub get
 
-      - name: Analyze
-        run: flutter analyze --no-fatal-infos
+      # در صورت نیاز به تولید فایل‌های build_runner (اگر پروژت نیاز داره کامنت رو بردار):
+      # - name: Run build_runner
+      #   run: flutter pub run build_runner build --delete-conflicting-outputs
 
-      - name: Build debug APK
-        run: flutter build apk --debug
+      - name: Build APK
+        run: flutter build apk --release
 
-      - name: Upload APK artifact
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug-apk
-          path: build/app/outputs/flutter-apk/app-debug.apk
-          retention-days: 30
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
