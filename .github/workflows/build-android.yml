@@ -34,7 +34,15 @@ jobs:
       # در صورت نیاز به تولید فایل‌های build_runner (اگر پروژت نیاز داره کامنت رو بردار):
       # - name: Run build_runner
       #   run: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          accept-android-sdk-licenses: true
+          log-accepted-android-sdk-licenses: false
 
+      - name: Install required NDK
+        run: sdkmanager --install "ndk;29.0.13113456"
+        
       - name: Build APK
         run: flutter build apk --release
 
